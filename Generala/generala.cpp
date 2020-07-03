@@ -3,8 +3,8 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
-
 #include "funciones.h"
+
 using namespace std;
 
 void cuadroDeJuego(int index, string jugadorActual, int totalPuntos1, int totalPuntos2);
@@ -14,8 +14,6 @@ void tirarDados(int vectorDados[5]);
 void mostrarDados(int vectorDados[5]);
 int buscarJugada(int *vectorDados, int &tiros);
 int dadosIguales(int *vectorDados, bool &hayDosIguales, bool &hayTresIguales, int &num);
-//bool dosIguales(int c);
-//bool tresIguales(int c);
 bool buscarEscalera(int *vectorDados, int &juego);
 bool buscarFull(bool &hayDosIguales, bool &hayTresIguales, int &juego);
 bool buscarPoker(int c, int &juego);
@@ -78,7 +76,7 @@ int main (){
                         P = h;
                     }
                 }
-                cout << "MAJOR PUNTAJE JUGADOR: " << histGanadores[P] << " CON " << histPuntajes[P] << " PUNTOS." << endl;
+                cout << "MAYOR PUNTAJE JUGADOR: " << histGanadores[P] << " CON " << histPuntajes[P] << " PUNTOS." << endl;
                 break;
             case 0:
                 return 0;
@@ -139,11 +137,15 @@ void unJugador(string &ganador, int &puntaje){
                         if (nuevoTiro == 's' || nuevoTiro == 'S'){
                             cout << "CUANTOS DADOS?" << endl;
                             cin >> cantDados;
-                            for(int y = 1; y <= cantDados; y++){
-                                cout << "POSICION DADO" << y << endl;
-                                cin >> posDado;
-                                srand(time(NULL));
-                                vectorDados[posDado-1] = rand()%6+1;
+                            if(cantDados<5){
+                                for(int y = 1; y <= cantDados; y++){
+                                    cout << "POSICION DADO" << y << endl;
+                                    cin >> posDado;
+                                    srand(time(NULL));
+                                    vectorDados[posDado-1] = rand()%6+1;
+                                }
+                            } else {
+                                tirarDados(vectorDados);
                             }
                             mostrarDados(vectorDados);
                             tiros++;
@@ -209,7 +211,6 @@ void dosJugadores(string &ganador, int &puntaje){
                 seguir=true;
                 tiros = 1;
                 cuadroDeJuego(index, jugadorActual, totalPuntos1, totalPuntos2);
-                puntosActuales = 0;
                 cout << "PARA EL JUGADOR: " << jugadorActual << endl;
                 cout << "RONDA " << index << " || " << "TIRO " << tiros << " || " << "PUNTOS " << puntosActuales << endl;
                 cout << endl;
@@ -239,11 +240,15 @@ void dosJugadores(string &ganador, int &puntaje){
                         if (nuevoTiro == 's' || nuevoTiro == 'S'){
                             cout << "CUANTOS DADOS?" << endl;
                             cin >> cantDados;
-                            for(int y = 1; y <= cantDados; y++){
-                                cout << "POSICION DADO" << y << endl;
-                                cin >> posDado;
-                                srand(time(NULL));
-                                vectorDados[posDado-1] = rand()%6+1;
+                            if(cantDados<5){
+                                for(int y = 1; y <= cantDados; y++){
+                                    cout << "POSICION DADO" << y << endl;
+                                    cin >> posDado;
+                                    srand(time(NULL));
+                                    vectorDados[posDado-1] = rand()%6+1;
+                                }
+                            } else {
+                                tirarDados(vectorDados);
                             }
                             mostrarDados(vectorDados);
                             tiros++;
@@ -264,6 +269,7 @@ void dosJugadores(string &ganador, int &puntaje){
                     totalPuntos2 = puntosActuales;
                     puntosActuales = totalPuntos1;
                 }
+                cout << endl;
                 system("pause");
                 system("cls");
             }
@@ -294,11 +300,6 @@ void tirarDados(int *vectorDados){
     for(int i=0; i<5; i++){
         vectorDados[i] = (rand()%6+1);
     }
-//    vectorDados[0]=4;
-//    vectorDados[1]=4;
-//    vectorDados[2]=5;
-//    vectorDados[3]=3;
-//    vectorDados[4]=1;
 }
 
 int buscarJugada(int *vectorDados, int &tiros){
@@ -309,7 +310,6 @@ int buscarJugada(int *vectorDados, int &tiros){
     ganaPartida=0;
 
     c = dadosIguales(vectorDados, hayDosIguales, hayTresIguales, num);
-  //  hayTresIguales = tresIguales(c);
     buscarEscalera(vectorDados,juego);
     buscarFull(hayDosIguales, hayTresIguales, juego);
     buscarPoker(c, juego);
@@ -346,20 +346,6 @@ int dadosIguales(int *vectorDados, bool &hayDosIguales, bool &hayTresIguales, in
     }
     return M;
 }
-
-//bool dosIguales(int c){
-//    if(c==2){
-//        return true;
-//    }
-//    return false;
-//}
-//
-//bool tresIguales(int c){
-//    if(c==3){
-//        return true;
-//    }
-//    return false;
-//}
 
 bool buscarEscalera(int *vectorDados, int &juego){
     int vaux[5]={0};
@@ -412,8 +398,7 @@ bool buscarPoker(int c, int &juego){
 bool buscarGenerala(int c, int &juego, int &tiros){
     if(c==5){
         juego = 4;
-        if(tiros==1)
-        {
+        if(tiros==1){
          juego = 5;
         }
         return true;
